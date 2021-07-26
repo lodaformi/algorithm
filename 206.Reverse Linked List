@@ -24,12 +24,14 @@ public:
     }
 
 //迭代方法
-    ListNode* reverseList(ListNode* head) {
-        ListNode* pre, *cur, *nxt;
+//翻转前N个节点
+    ListNode* reverseListN(ListNode* head) {
+        ListNode *pre, *cur, *nxt;
         pre=nullptr;
         cur=head;
         nxt=head;
-        while  (cur != nullptr) {
+        // while  (cur != nullptr && ) {
+        while  (cur->val != 4) {
             nxt = cur->next;
 
             //head->next = pre;
@@ -38,7 +40,30 @@ public:
             pre = cur;
             cur = nxt;
         }
+        head->next =cur;
+        return pre;
+    }
 
+    //迭代方法
+    //反转整个链表
+    ListNode* reverseList(ListNode* head) {
+        //定义三个指针分别指向前驱节点，当前节点，后驱节点
+        ListNode *pre, *cur, *nxt;
+        pre=nullptr;
+        cur=head;
+        nxt=head;
+        while  (cur != nullptr) {
+            //nxt指针后移一个
+            nxt = cur->next;
+            //当前指针的下个节点指向前驱节点，反转指针指向
+            cur->next = pre;
+
+            //前驱指针后移
+            pre = cur;
+            //当前指针后移
+            cur = nxt;
+        }
+        //返回反转后的头结点
         return pre;
     }
 };
