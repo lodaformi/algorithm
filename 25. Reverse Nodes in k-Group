@@ -1,0 +1,41 @@
+class Solution {
+public:
+    //迭代反转N个节点
+    ListNode* reverseN(ListNode *node_a, ListNode* node_b) {
+        ListNode *pre, *cur, *nxt;
+        pre=nullptr;
+        cur=nxt=node_a;
+        while (cur != node_b) {
+            nxt = cur->next;
+            //指针反向
+            cur->next=pre;
+
+            //三个指针后移一个
+            pre = cur;
+            cur = nxt;
+        }
+
+        //返回反转之后的头结点
+        return pre;
+    }
+
+    //递归K个一组反转整个链表
+    ListNode* reverseKGroup(ListNode* head, int k) {
+        if (head == nullptr) return head;
+        ListNode *before, *back, *new_head;
+        before=back=head;
+
+        //组内的指针移动k次
+        for (int i=0; i<k; i++) {
+            //递归结束条件，即剩余的节点不能构成k组
+            if (back == nullptr) return head;
+            back = back->next;
+        }
+        //反转这k个节点
+        //这里不能用before指针接收返回值，因为before指针一直在变化
+        new_head = reverseN(before, back);
+
+        before->next = reverseKGroup(back, k);
+        return new_head;
+    }
+};
