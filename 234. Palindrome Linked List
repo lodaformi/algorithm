@@ -1,0 +1,68 @@
+//请判断一个链表是否为回文链表。
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* reverse(ListNode *head) {
+        ListNode *pre, *cur, *nxt;
+        pre = nullptr;
+        cur = nxt = head;
+        while (cur != nullptr) {
+            nxt = cur->next;
+            cur->next = pre;
+        
+            pre = cur;
+            cur = nxt;
+        }
+
+        //返回反转之后的头指针
+        return pre;
+    }
+
+    //方法1：使用快慢指针+倒序遍历链表
+    bool isPalindrome(ListNode *head) {
+        ListNode *slow, *fast;
+        slow=fast=head;
+
+        //奇偶长度链表都可判断
+        while(fast != nullptr && fast->next != nullptr) {
+            slow = slow->next;
+            fast = fast->next->next;
+        }
+        //如果快指针不为空，说明长度为奇数，此时慢指针指向中心
+        //而我们是要获取到后一个节点，才能比较是否是回文结构，
+        //所以慢指针应再后移一个
+        if (fast != nullptr) {
+            slow = slow->next;
+        }
+
+        //后续遍历
+        ListNode *left = head;
+        ListNode *right = reverse(slow);
+        ListNode *last = right;
+
+        while (right != nullptr) {
+            //如果不相等，说明不是回文
+            if (left->val != right->val) {
+                return false;
+            }
+            //如果相同，指针都向后移动一个，继续比较
+            left = left->next;
+            right = right->next;
+        }
+
+        //回复被破坏的链表结构?
+        // left->next = reverse(last);
+        return true;
+    }
+
+    //方法2：倒序遍历链表
+};
