@@ -1,22 +1,45 @@
-// 主函数
-Node connect(Node root) {
-    if (root == null) return null;
-    connectTwoNode(root.left, root.right);
-    return root;
-}
+/*
+// Definition for a Node.
+class Node {
+public:
+    int val;
+    Node* left;
+    Node* right;
+    Node* next;
 
-// 辅助函数
-void connectTwoNode(Node node1, Node node2) {
-    if (node1 == null || node2 == null) {
-        return;
+    Node() : val(0), left(NULL), right(NULL), next(NULL) {}
+
+    Node(int _val) : val(_val), left(NULL), right(NULL), next(NULL) {}
+
+    Node(int _val, Node* _left, Node* _right, Node* _next)
+        : val(_val), left(_left), right(_right), next(_next) {}
+};
+*/
+
+class Solution {
+public:
+    Node* connect(Node* root) {
+        if (root == nullptr ) return root;
+        //同一层不同子树之间也要有联系，只用一个参数的connect函数不能做到
+        //所以再定义一个两个参数的函数connect_two_nodes，递归调用
+        connect_two_nodes(root->left, root->right);
+        return root;
     }
-    /**** 前序遍历位置 ****/
-    // 将传入的两个节点连接
-    node1.next = node2;
 
-    // 连接相同父节点的两个子节点
-    connectTwoNode(node1.left, node1.right);
-    connectTwoNode(node2.left, node2.right);
-    // 连接跨越父节点的两个子节点
-    connectTwoNode(node1.right, node2.left);
-}
+    void connect_two_nodes(Node* a, Node* b) {
+        //递归结束条件
+        if (a == nullptr || b == nullptr) return;
+        
+        /***前序遍历***/
+        //连接两个节点
+        //初始状态所有节点的next指针都为空，最右侧节点的指针已经为null，不用管它
+        a->next = b;
+
+        //递归连接a节点的所有子树
+        connect_two_nodes(a->left, a->right);
+        //递归连接b节点的所有子树
+        connect_two_nodes(b->left, b->right);
+        //连接不同子树
+        connect_two_nodes(a->right, b->left);
+    }
+};
