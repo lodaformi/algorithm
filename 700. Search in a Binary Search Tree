@@ -19,6 +19,9 @@ public:
     TreeNode* search(TreeNode *root, int val) {
         //递归结束条件
         if (root == nullptr) return root;
+        
+        //前序、中序、后序遍历都行
+        
         //如果节点的值和val相等，返回该节点
         if (root->val == val) return root;
         //如果val值比该节点值大，在右子树中寻找
