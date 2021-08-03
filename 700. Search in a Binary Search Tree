@@ -1,0 +1,35 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* searchBST(TreeNode* root, int val) {
+        if  (root == nullptr)  return root;
+        return search(root, val);
+    }
+
+    TreeNode* search(TreeNode *root, int val) {
+        //递归结束条件
+        if (root == nullptr) return root;
+        //如果节点的值和val相等，返回该节点
+        if (root->val == val) return root;
+        //如果val值比该节点值大，在右子树中寻找
+        if (val > root->val) {
+            return search(root->right, val);
+        }
+        //如果val值比该节点值小，在左子树中寻找
+        if (val < root->val) {
+            return search(root->left, val);
+        }
+        //如果整个子树中都不存在val，则返回空指针
+        return nullptr;
+    }
+};
