@@ -1,0 +1,42 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+ //此方法并非最优
+class Solution {
+public:
+    //注意：不能写到kthSmallest一个函数里面，因为用了递归的性质，在指针为nullptr时，需return
+    //写到一个函数里面，整个函数就结束了
+    int kthSmallest(TreeNode* root, int k) {
+        traverse(root,k);
+        return res;
+    }
+
+    //res用于记录元素值
+    int res = -1;
+    //rank用于记录从大到小的排序
+    int rank = 0;
+
+    void traverse(TreeNode* root, int k) {
+        if (root == nullptr) return;
+        traverse(root->left, k);
+
+        /***中序遍历***/
+        rank++;
+        //如果找到，返回res
+        if (rank == k) {
+            res = root->val;
+            return;
+        }
+
+        traverse(root->right, k);
+
+    }
+};
