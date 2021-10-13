@@ -16,11 +16,9 @@ public:
         //刚开始不用判断链表1和链表2有空的情况，下面会处理
         
         //需定义两个指针变量，newHead是新链表的头结点，保持不变
-        //ptr指针移动
-        
+        //ptr指针移动        
         ListNode* newHead = new ListNode;
-        ListNode* ptr  = new ListNode;
-        ptr = newHead;
+        ListNode* ptr  = newHead;
         
         //如果链表1和链表2不为空，
         while (l1 != nullptr && l2 != nullptr) {
