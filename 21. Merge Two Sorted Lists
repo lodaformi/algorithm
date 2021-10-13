@@ -1,0 +1,55 @@
+/**
+ * Merge two sorted linked lists and return it as a sorted list. The list should be made by splicing together the nodes of the first two lists.
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+ 
+class Solution {
+public:
+    ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {  
+        //刚开始不用判断链表1和链表2有空的情况，下面会处理
+        
+        //需定义两个指针变量，newHead是新链表的头结点，保持不变
+        //ptr指针移动
+        
+        ListNode* newHead = new ListNode;
+        ListNode* ptr  = new ListNode;
+        ptr = newHead;
+        
+        //如果链表1和链表2不为空，
+        while (l1 != nullptr && l2 != nullptr) {
+            if (l1->val <= l2->val) {
+                //则将值小的节点放入到新链表中
+                ptr->next = l1;
+                //链表指针后移一个
+                l1 = l1->next;
+            }else {
+                //则将值小的节点放入到新链表中
+                ptr->next = l2;
+                l2 = l2->next;
+            }
+            //新链表指针后移一个
+            ptr = ptr->next;
+        }
+
+        //如果传入进来的链表有一个为空，则上面的while循环不会执行，if会执行一个
+        //如果传入进来的链表都为空，则上面的while循环不会执行，这两个if也不会执行，返回空指针
+        //如果上面执行了while循环，则将不空的链表加入到新链表中即可
+        if (l1 != nullptr) {
+            ptr->next = l1;
+        }
+
+        if (l2 != nullptr) {
+            ptr->next = l2;
+        }
+        
+        //注意返回的是newHead->next，因为newHead是空指针
+        return newHead->next;
+    }
+};
