@@ -1,0 +1,28 @@
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+bool hasCycle(ListNode* head) {
+  ListNode *fast=head, *slow=head;
+  //当fast为nullptr时说明走到了最后一个节点的后继，也就是nullptr，此时链表节点个数为偶数，说明没有环
+  //当fast不为nullptr并且fast->next为nullptr时说明走到了最后一个节点，并且最后一个节点指向nullptr，
+  //此时链表节点个数为奇数，说明没有环
+  while (fast != nullptr && fast->next != nullptr) {
+      //慢指针走一步，快指针走两步，两者的差距在不断拉大
+      slow = slow->next;
+      fast = fast->next->next;
+      //快慢指针相遇，有环
+      if (fast == slow) {
+        return true;
+      }
+  }
+    //没有环
+    return false;
+  }
+};
