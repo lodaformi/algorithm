@@ -1,0 +1,68 @@
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
+      ListNode *ptrA = headA, *ptrB = headB;
+      //自己写的代码，有两个问题
+      //问题1：第一个while循环改变了listA的数据结构，将两个链表连接了起来listA->listB
+      //while (ptrA->next != nullptr) {
+      //  ptrA = ptrA->next;
+      //}
+      //ptrA->next = headB;
+
+      //第二个while循环改变了listB的数据结构，将两个链表连接了起来listB->listA->listB，形成环了，造成运行超时
+      //while (ptrB->next != nullptr) {
+      //  ptrB = ptrB->next;
+      //}
+      //ptrB->next = headA;
+
+      //若把while循环改写成下面的形式，没有改变两个链表的结构，不会形成环
+      //*********************************************
+      // while (ptrA != nullptr) {
+      //     ptrA = ptrA->next;
+      // }
+      // ptrA = headB;
+
+      //while (ptrB!= nullptr) {
+      //     ptrB = ptrB->next;
+      // }
+      //ptrB = headA;
+      //**********************************************
+
+      //问题2：接上条注释，但是ptrA和ptrB不是同步移动的，造成一个移动到了nullptr另一个还在移动，再次移动时报错
+      //while (ptrA != ptrB) {
+      //  ptrA = ptrA->next;
+      //  ptrB = ptrB->next;
+      //}
+      //上述两个问题是由于两个指针的不同步移动造成的，下方的参考答案就好很多。
+
+      //参考答案
+      //循环退出时有两种情况
+      //一：两个链表有交点，指针指向了交点，
+      //二：两个链表没有交点，两个指针均指向了nullptr
+      //注意：ptrA和ptrB在每一次循环中都是先后移动了一步
+      while (ptrA != ptrB) {
+        //ptrA移动到自己的表尾，转到headB链
+        if (ptrA != nullptr) {
+          ptrA = ptrA->next;
+        } else {
+          ptrA = headB;
+        }
+        //ptrB移动到自己的表尾，转到headA链
+        if (ptrB != nullptr) {
+          ptrB = ptrB->next;
+        } else {
+          ptrB = headA;
+        }
+      }
+      //返回交点或者nullptr
+      return ptrA;
+  }
+};
