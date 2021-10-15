@@ -1,41 +1,57 @@
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
 class Solution {
 public:
-    //迭代反转N个节点
-    ListNode* reverseN(ListNode *node_a, ListNode* node_b) {
+       //反转N个节点
+    ListNode* reverseN(ListNode* head, ListNode* end) {
         ListNode *pre, *cur, *nxt;
-        pre=nullptr;
-        cur=nxt=node_a;
-        while (cur != node_b) {
-            nxt = cur->next;
+        //这里可以优化一下，将pre指针指向end节点，
+        //这样在反转指针指向时原来的第一个节点就指向了end节点，达到反转的目的
+        //如果pre为nullptr，则还需将head->next指向end，两种方式都行
+        //就本地而言pre为nullptr也没问题，因为reverseKGroup中，指明了a->next的指向。
+        pre = end;
+        // pre = nullptr;
+        cur = head, nxt = head;
+        while(cur != end) {
+            //nxt指针先移动
+            nxt = nxt->next;
             //指针反向
-            cur->next=pre;
-
-            //三个指针后移一个
+            cur->next = pre;
+            //pre和cur向后移动一下
             pre = cur;
             cur = nxt;
         }
-
-        //返回反转之后的头结点
+        //返回反转之后的头结点  
         return pre;
     }
 
-    //递归K个一组反转整个链表
-    ListNode* reverseKGroup(ListNode* head, int k) {
-        if (head == nullptr) return head;
-        ListNode *before, *back, *new_head;
-        before=back=head;
 
+    ListNode* reverseKGroup(ListNode* head, int k) {
+        if (head == nullptr)  return head;
+        ListNode *a, *b;
+        a =head, b= head;
         //组内的指针移动k次
         for (int i=0; i<k; i++) {
-            //递归结束条件，即剩余的节点不能构成k组
-            if (back == nullptr) return head;
-            back = back->next;
+            //递归结束条件，即剩余的节点不能构成一组
+            //注意指针移动和if判断的顺序，先判断，再移动指针
+            //在链表2个元素，反转2个节点的情况下，如果先移动指针，则不能反转
+            // b = b->next;
+            if (b == nullptr) return head;
+            b = b->next;
         }
         //反转这k个节点
-        //这里不能用before指针接收返回值，因为before指针一直在变化
-        new_head = reverseN(before, back);
-
-        before->next = reverseKGroup(back, k);
-        return new_head;
+        ListNode *newHead = reverseN(a, b);
+        //递归调用
+        a->next = reverseKGroup(b,k);
+        
+        return newHead;
     }
 };
