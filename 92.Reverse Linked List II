@@ -1,4 +1,6 @@
 /**
+Given the head of a singly linked list and two integers left and right where left <= right, 
+reverse the nodes of the list from position left to position right, and return the reversed list.
  * Definition for singly-linked list.
  * struct ListNode {
  *     int val;
@@ -13,34 +15,59 @@ class Solution {
 public:
     //为什么successor不能是函数内局部变量？
     //当为局部变量时，尾部数据丢失
-    //大概原因是，递归时每次压栈都创建了一个successor，只有n为1是successor不为空，其他的情况都为空指针
-    //出栈时，后出栈的sucessor空指针会覆盖先出栈的值，
-    ListNode* successor = nullptr; // 后驱节点
+    //大概原因是，递归时每次压栈都创建了一个successor，只有n为1是successor不为空，其他的情况都为空指针，出栈时，后出栈的sucessor空指针会覆盖先出栈的值，
+
+    //递归实现翻转N个节点
+    ListNode* successor = nullptr; // 记录后驱节点
+
 
     // 反转以 head 为起点的 n 个节点，返回新的头结点
     ListNode* reverseN(ListNode* head, int n) {
-
-        if (n == 1) { 
+        if (n == 1) {
             // 记录第 n + 1 个节点
             successor = head->next;
             return head;
         }
         // 以 head.next 为起点，需要反转前 n - 1 个节点
-        ListNode* last = reverseN(head->next, n - 1);
-
+        ListNode* last = reverseN(head->next, n-1);
         head->next->next = head;
         // 让反转之后的 head 节点和后面的节点连起来
-        head->next = successor;
+        head->next =  successor;
+
         return last;
     }
 
+    //迭代实现翻转N个节点
+    ListNode* reverseN2(ListNode *head, int step) {
+        if (head == nullptr) return head;
+        ListNode *start=head, *end = head;
+        //找到end节点
+        for (int i=0; i< step; i++) {
+            end = end->next;
+        }
+        //按照迭代的思路翻转节点即可
+        ListNode *pre, *cur, *nxt;
+        pre=end;
+        cur = nxt = head;
+        while (cur != end) {
+            nxt = nxt->next;
+            cur->next = pre;
+
+            pre = cur;
+            cur =nxt;
+        }
+        return pre;
+    }
+
+
     ListNode* reverseBetween(ListNode* head, int left, int right) {
+        if (head == nullptr) return head;
         // base case
         if (left == 1) {
-            return reverseN(head, right);
+            return reverseN2(head, right);
         }
         // 前进到反转的起点触发 base case
-        head->next = reverseBetween(head->next, left - 1, right - 1);
+        head->next = reverseBetween(head->next, left-1, right-1);
         return head;
     }
 };
