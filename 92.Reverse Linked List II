@@ -11,6 +11,10 @@
 
 class Solution {
 public:
+    //为什么successor不能是函数内局部变量？
+    //当为局部变量时，尾部数据丢失
+    //大概原因是，递归时每次压栈都创建了一个successor，只有n为1是successor不为空，其他的情况都为空指针
+    //出栈时，后出栈的sucessor空指针会覆盖先出栈的值，
     ListNode* successor = nullptr; // 后驱节点
 
     // 反转以 head 为起点的 n 个节点，返回新的头结点
