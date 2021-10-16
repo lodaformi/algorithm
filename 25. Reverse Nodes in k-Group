@@ -10,13 +10,13 @@
  */
 class Solution {
 public:
-       //反转N个节点
+    //迭代反转N个节点
     ListNode* reverseN(ListNode* head, ListNode* end) {
         ListNode *pre, *cur, *nxt;
         //这里可以优化一下，将pre指针指向end节点，
         //这样在反转指针指向时原来的第一个节点就指向了end节点，达到反转的目的
         //如果pre为nullptr，则还需将head->next指向end，两种方式都行
-        //就本地而言pre为nullptr也没问题，因为reverseKGroup中，指明了a->next的指向。
+        //就本题而言，pre为nullptr也没问题，因为reverseKGroup中，指明了a->next的指向。
         pre = end;
         // pre = nullptr;
         cur = head, nxt = head;
@@ -33,6 +33,28 @@ public:
         return pre;
     }
 
+    //递归反转N个节点
+    //这里end就是step为1时的后继，所以这里不用定义额外的变量来接受后继
+    //在递归调用中，end不变，一直传递下去
+    ListNode* reverseN2(ListNode* head, ListNode* end, int step) {
+        //递归结束的条件，step为1
+        if (step == 1) return head;
+        ListNode* last = reverseN2(head->next, end,step-1);
+        head->next->next = head;
+        head->next = end;
+        return last;
+    }
+
+    //递归反转N个节点
+    //对上面的递归方法进行优化
+    ListNode* reverseN3(ListNode* head, ListNode* end) {
+        //base case 更改为head->next == end，不需要用step
+        if (head->next == end) return head;
+        ListNode* last = reverseN3(head->next, end);
+        head->next->next = head;
+        head->next = end;
+        return last;
+    }
 
     ListNode* reverseKGroup(ListNode* head, int k) {
         if (head == nullptr)  return head;
@@ -48,7 +70,11 @@ public:
             b = b->next;
         }
         //反转这k个节点
-        ListNode *newHead = reverseN(a, b);
+        // ListNode *newHead = reverseN(a, b);
+        //使用递归的方法，上面计算出了k个一组的开始起点和结束起点，为了方便利用，直接传进去
+        //但是递归还要用到相对位置k，所以这里传递了3个参数
+        // ListNode *newHead = reverseN2(a, b, k);
+        ListNode *newHead = reverseN3(a, b);
         //递归调用
         a->next = reverseKGroup(b,k);
         
