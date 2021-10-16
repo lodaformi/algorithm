@@ -40,22 +40,26 @@ public:
     //迭代实现翻转N个节点
     ListNode* reverseN2(ListNode *head, int step) {
         if (head == nullptr) return head;
-        ListNode *start=head, *end = head;
-        //找到end节点
+        ListNode *end = head;
+        ////找到最终要停止的节点位置，不包括这个节点
         for (int i=0; i< step; i++) {
             end = end->next;
         }
         //按照迭代的思路翻转节点即可
         ListNode *pre, *cur, *nxt;
+        //因为反转的是前N个节点，pre要指向后面end
         pre=end;
         cur = nxt = head;
         while (cur != end) {
+            //先移动nxt
             nxt = nxt->next;
+            //cur指向反转
             cur->next = pre;
-
+            //移动pre和cur指针
             pre = cur;
             cur =nxt;
         }
+        //此时pre指向最后一个节点，返回pre
         return pre;
     }
 
