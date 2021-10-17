@@ -1,4 +1,3 @@
-//请判断一个链表是否为回文链表。
 /**
  * Definition for singly-linked list.
  * struct ListNode {
@@ -11,58 +10,101 @@
  */
 class Solution {
 public:
-    ListNode* reverse(ListNode *head) {
-        ListNode *pre, *cur, *nxt;
-        pre = nullptr;
-        cur = nxt = head;
-        while (cur != nullptr) {
-            nxt = cur->next;
-            cur->next = pre;
-        
-            pre = cur;
-            cur = nxt;
+    //方法1：反转链表，两条链表做比较
+    //不管是递归反转链表还是迭代反转链表，[1,1,2,1]链表报错，问题出在哪里？？
+    bool isPalindrome1(ListNode* head) {
+        ListNode* newHead = reverseList1(head);
+        while (head != nullptr && newHead->next != nullptr) {
+            if (head->val != newHead->val) {
+                return false;
+            }
+            head=head->next;
+            newHead=newHead->next;
         }
-
-        //返回反转之后的头指针
-        return pre;
+        return true;
     }
 
-    //方法1：使用快慢指针+倒序遍历链表
-    bool isPalindrome(ListNode *head) {
-        ListNode *slow, *fast;
-        slow=fast=head;
+    //方法2：使用后序遍历，空间复杂度高
+    ListNode* left; //要定义为全局变量，因为两个函数要用到
+    bool isPalindrome2(ListNode* head) {
+        left = head;
+        return tranverse(head);
+    }
 
-        //奇偶长度链表都可判断
+    bool tranverse(ListNode* right) {
+        if (right == nullptr) return true;
+        bool res = tranverse(right->next);
+        //这条语句不理解？？？ &&后面的情况与res什么关系
+        // res = res && (right->val == left->val);
+
+        //当出栈过程中res出现false的情况，tranvers不会退出，
+        //会继续出栈，这种情况怎么是怎么判断的？
+        if (right->val != left->val) {
+            res = false;
+        }
+        left = left->next;
+        return res;
+    }
+
+    //方法3：反转部分链表
+    bool isPalindrome(ListNode* head) {
+        //第一步：使用快慢指针先找出链表的中点，分奇偶情况，奇数的话slow指针还要走一步
+        ListNode *mid = findMiddle(head);
+        
+        //第二步：反转后半部分
+        //为什么使用递归反转链表报错？？？
+        ListNode* newHead = reverseList2(mid);
+
+        //第三步：前半部分和后半部分比较，不相等就返回false
+        while(newHead != nullptr) {
+            if (head->val != newHead->val) {
+                return false;
+            }
+            head = head->next;
+            newHead = newHead->next;
+        }
+        return true;
+    }
+
+    //找链表中点
+    ListNode* findMiddle(ListNode* head) {
+        if (head == nullptr)  return nullptr;
+        ListNode *fast, *slow;
+        fast = slow = head;
         while(fast != nullptr && fast->next != nullptr) {
             slow = slow->next;
             fast = fast->next->next;
         }
-        //如果快指针不为空，说明长度为奇数，此时慢指针指向中心
-        //而我们是要获取到后一个节点，才能比较是否是回文结构，
-        //所以慢指针应再后移一个
+        //奇数的话slow指针还要走一步
         if (fast != nullptr) {
             slow = slow->next;
         }
 
-        //后续遍历
-        ListNode *left = head;
-        ListNode *right = reverse(slow);
-        ListNode *last = right;
-
-        while (right != nullptr) {
-            //如果不相等，说明不是回文
-            if (left->val != right->val) {
-                return false;
-            }
-            //如果相同，指针都向后移动一个，继续比较
-            left = left->next;
-            right = right->next;
-        }
-
-        //回复被破坏的链表结构?
-        // left->next = reverse(last);
-        return true;
+        return slow;
     }
 
-    //方法2：倒序遍历链表
+    //递归反转整个链表
+    //在方法3中反转后半部分链表报错？为什么？
+    ListNode* reverseList1(ListNode* head) {
+        if (head->next == nullptr) {return head;}
+        ListNode* last = reverseList1(head->next);
+        head->next->next=head;
+        head->next=nullptr;
+        return last;
+    }
+
+    //迭代反转整个链表
+    ListNode* reverseList2(ListNode* head) {
+        ListNode *pre, *cur, *nxt;
+        pre=nullptr;
+        cur = nxt = head;
+        while (cur != nullptr) {
+            nxt = nxt->next;
+            cur->next = pre;
+
+            pre = cur;
+            cur = nxt;
+        }
+        return pre;
+    }
 };
