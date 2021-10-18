@@ -39,4 +39,31 @@ public:
 
         return root;
     }
+    
+        TreeNode* constructMaximumBinaryTree(vector<int>& nums) {
+        if (nums.size() == 0) return nullptr;
+
+        return build(nums, 0, nums.size()-1);
+    }
+
+    //版本2
+    TreeNode* build(vector<int>& nums, int startIndex, int endIndex) {
+        if (startIndex > endIndex) return nullptr;
+        //找最大值
+        //前序遍历
+        int max = -1;
+        int index = -1;
+        for (int i=startIndex; i<=endIndex; i++) {
+            if (nums[i] > max) {
+                max = nums[i];
+                index = i;
+            }
+        }
+        TreeNode* root = new TreeNode(max);
+
+        root->left = build(nums, startIndex, index-1);
+        root->right = build(nums, index+1, endIndex);
+
+        return root;
+    }
 };
