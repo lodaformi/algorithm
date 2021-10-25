@@ -15,7 +15,6 @@ public:
     //序列化
     // Encodes a tree to a single string.
     string serialize(TreeNode* root) {
-        if  (root == nullptr) return NULLCHAR;
         //方法一：前序遍历
         //使用stringstream存放陆续存进去的字符串
         stringstream ss;
@@ -97,7 +96,7 @@ public:
 // Your Codec object will be instantiated and called as such:
 // Codec ser, deser;
 // TreeNode* ans = deser.deserialize(ser.serialize(root));
-
+///////////////////////////////////////////////////////////////////////////////////////////
     //二叉树后序遍历
     string SEP = ",";
     string NULLCHAR = "#";
@@ -124,6 +123,7 @@ public:
 
     // Decodes your encoded data to tree.
     TreeNode* deserialize(string data) {
+        if (data.size() == 0)  return nullptr;
         //以逗号为分隔符将data分开并存放到list中
         list<string> ls;
 
@@ -157,3 +157,112 @@ public:
 
         return root;
     }
+
+////////////////////////////////////////////////////////////////////////////////
+class Codec {
+public:
+    //层序遍历
+    string SEP = ",";
+    string NULLCHAR = "#";
+
+    // Encodes a tree to a single string.
+    string serialize(TreeNode* root) {
+        if (root == nullptr) return "";
+
+        stringstream ss;
+        //层序遍历需要借助队列
+        queue<TreeNode*> q;
+        q.push(root);
+
+        //每次取出一个节点，将当前节点的左右孩子加入到队列中，循环执行，直到队列为空
+        while (!q.empty()) {
+            //取出当前节点
+            TreeNode* node = q.front();
+            //从队列中删除
+            q.pop();
+
+            //如果当前节点为空，则向ss中写入#，
+            if (node == nullptr) {
+                ss << NULLCHAR << SEP;
+                continue;
+            }
+
+            //如果当前节点不为空，则向ss中写入val，
+            ss << node->val << SEP;
+
+            //将当前节点的左右孩子加入到队列中
+            q.push(node->left);
+            q.push(node->right);
+        }
+
+        return ss.str();
+    }
+
+
+    // Decodes your encoded data to tree.
+    TreeNode* deserialize(string data) {
+        if (data.size() == 0) return nullptr;
+
+        //以逗号为分隔符将data分开放入到list中
+        list<string> ls;
+
+        char* input = new char[data.size() + 1];
+        strcpy(input, data.c_str());
+
+        char* delimiter = new char[SEP.size() + 1];
+        strcpy(delimiter, SEP.c_str());
+
+        char* pch = strtok(input, delimiter);
+        while (pch) {
+            string s = pch;
+            ls.push_back(s);
+            pch = strtok(nullptr, delimiter);
+        }
+        //这一段代码执行完后，ls中存放的是值和#号
+
+        //层序遍历需要借助队列
+        //取出ls中的第一个元素，并创建根节点 
+        TreeNode* root = new TreeNode(stoi(ls.front()));
+        //将ls中的第一个元素删除
+        ls.pop_front();
+
+        //创建队列，将根节点入队
+        queue<TreeNode*> q;
+        q.push(root);
+
+        //每次从队列中取出一个节点，从ls中取出两个值，判断其值作为该节点的左右孩子，并入队，直到ls为空
+        while (!ls.empty()) {
+            //从队列中取出头结点
+            TreeNode* node = q.front();
+            //从队列中删除头结点
+            q.pop();
+
+            //从ls中取出第一个值
+            string s = ls.front();
+            //将ls中第一个值删除
+            ls.pop_front();
+            if (s == NULLCHAR) {
+                //如果s为#，将左孩子置空
+                node->left = nullptr;
+            }else{
+                //如果s不为#，创建左孩子，并入队
+                node->left = new TreeNode(stoi(s));
+                q.push(node->left);
+            }
+            
+            //从ls中继续取值，并从队列中删除
+            s = ls.front();
+            ls.pop_front();
+            if (s == NULLCHAR) {
+                //如果s为#，将右孩子置空
+                node->right = nullptr;
+            }else{
+                //如果s不为#，创建右孩子，并入队
+                node->right = new TreeNode(stoi(s));
+                q.push(node->right);
+            }
+        }
+
+        return root;
+    }
+};
