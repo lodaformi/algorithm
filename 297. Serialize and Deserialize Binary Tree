@@ -1,0 +1,99 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Codec {
+public:
+    string SEP = ",";
+    string NULLCHAR = "#";
+
+    //序列化
+    // Encodes a tree to a single string.
+    string serialize(TreeNode* root) {
+        if  (root == nullptr) return NULLCHAR;
+        //方法一：前序遍历
+        //使用stringstream存放陆续存进去的字符串
+        stringstream ss;
+
+        serialize(root, ss);
+
+        //将stringstream转换为string
+        return ss.str();
+    }
+
+    //方法重载overload
+    //注意stringstream传入的是引用
+    void serialize(TreeNode* root, stringstream& ss) {
+        //二叉树的前序遍历
+        //如果root为空指针，将NULLCHAR和SEP写入到ss中
+        if  (root == nullptr) {
+            ss << NULLCHAR << SEP;
+            return;
+        }
+
+        //如果root不为空，将root->val和SEP写入到ss中
+        ss << root->val << SEP;
+
+        //递归遍历root的左右子树
+        serialize(root->left, ss);
+        serialize(root->right, ss);
+    }
+
+    //反序列化
+    // Decodes your encoded data to tree.
+    TreeNode* deserialize(string data) {
+        if (data.size() == 0)  return nullptr;
+
+        //使用list存放分隔出来的字符串
+        list<string> ls;
+
+        //因为下面要使用strtok函数，它的输入是char*，所以将字符串转换为char*类型
+        //将字符串转换为char *
+        char *input = new char[data.size() + 1];    //注意多申请一个空间，用于存放\0
+        strcpy(input, data.c_str());                //字符串拷贝
+
+        //将分隔符转换为char *
+        char *delimiters = new char[SEP.size() + 1];
+        strcpy(delimiters, SEP.c_str());
+
+        //以","逗号为分隔符，将input中的元素分隔开，同时存入链表中
+        char *token = strtok(input, delimiters);
+        while (token) {
+            string s = token;
+            ls.push_back(s);
+            token = strtok(nullptr, delimiters);
+        }
+
+        return deserialize(ls);
+    }
+
+    //反序列化辅助函数
+    //注意传入的是引用
+    TreeNode* deserialize(list<string>& ls) {
+        //第一个元素即为链表的根节点，取出其值
+        string str = ls.front();
+        //删除第一个元素
+        ls.pop_front();
+
+        //如果str为#，返回空指针
+        if (str == NULLCHAR) return nullptr;
+        //如果str不为#，则创建节点
+        //string转换成int的方法，stoi()
+        TreeNode* root = new TreeNode(stoi(str));
+
+        //递归生成左右子树
+        root->left = deserialize(ls);
+        root->right = deserialize(ls);
+
+        return root;
+    }
+};
+
+// Your Codec object will be instantiated and called as such:
+// Codec ser, deser;
+// TreeNode* ans = deser.deserialize(ser.serialize(root));
