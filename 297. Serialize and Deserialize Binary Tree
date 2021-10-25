@@ -55,7 +55,7 @@ public:
         //因为下面要使用strtok函数，它的输入是char*，所以将字符串转换为char*类型
         //将字符串转换为char *
         char *input = new char[data.size() + 1];    //注意多申请一个空间，用于存放\0
-        strcpy(input, data.c_str());                //字符串拷贝
+        strcpy(input, data.c_str());                //字符串拷贝，先将string转换为char*，再拷贝到input中
 
         //将分隔符转换为char *
         char *delimiters = new char[SEP.size() + 1];
