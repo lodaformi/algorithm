@@ -97,3 +97,63 @@ public:
 // Your Codec object will be instantiated and called as such:
 // Codec ser, deser;
 // TreeNode* ans = deser.deserialize(ser.serialize(root));
+
+    //二叉树后序遍历
+    string SEP = ",";
+    string NULLCHAR = "#";
+    // Encodes a tree to a single string.
+    string serialize(TreeNode* root) {
+        stringstream ss;
+        serialize(root, ss);
+
+        return ss.str();
+    }
+
+    void serialize(TreeNode* root, stringstream& ss) {        
+        if (root == nullptr) {
+            ss << NULLCHAR << SEP;
+            return;
+        }
+
+        //后序遍历
+        serialize(root->left, ss);
+        serialize(root->right, ss);
+
+        ss << root->val << SEP;
+    }
+
+    // Decodes your encoded data to tree.
+    TreeNode* deserialize(string data) {
+        //以逗号为分隔符将data分开并存放到list中
+        list<string> ls;
+
+        char* input = new char[data.size() + 1];
+        strcpy(input, data.c_str());
+
+        char* delimiter = new char[SEP.size() + 1];
+        strcpy(delimiter, SEP.c_str());
+
+        char* pch = strtok(input, delimiter);
+        while(pch) {
+            string s = pch;
+            ls.push_back(s);
+            pch = strtok(nullptr, delimiter);
+        }
+
+        return deserialize(ls);
+    }
+
+    TreeNode* deserialize(list<string>& ls) {
+        //后序遍历的最后一个节点为根节点，取出后删除
+        string s = ls.back();
+        ls.pop_back();
+
+        if (s == NULLCHAR) return nullptr;
+        TreeNode* root = new TreeNode(stoi(s));
+
+        //递归生成子树，注意后序遍历先生成右子树
+        root->right = deserialize(ls);
+        root->left = deserialize(ls);
+
+        return root;
+    }
