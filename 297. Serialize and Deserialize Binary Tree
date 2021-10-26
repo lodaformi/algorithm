@@ -167,9 +167,14 @@ public:
 
     // Encodes a tree to a single string.
     string serialize(TreeNode* root) {
-        if (root == nullptr) return "";
-
         stringstream ss;
+        
+        //如果root为空
+        if (root == nullptr) {
+            ss << NULLCHAR << SEP;
+            return ss.str();
+        }
+        
         //层序遍历需要借助队列
         queue<TreeNode*> q;
         q.push(root);
@@ -221,11 +226,16 @@ public:
         //这一段代码执行完后，ls中存放的是值和#号
 
         //层序遍历需要借助队列
-        //取出ls中的第一个元素，并创建根节点 
-        TreeNode* root = new TreeNode(stoi(ls.front()));
+        //取出ls中的第一个元素
+        string rootStr = ls.front();
         //将ls中的第一个元素删除
         ls.pop_front();
-
+        
+        //需对rootStr做判断，为空则返回
+        if (rootStr == NULLCHAR) return nullptr;
+        //非空，则创建根节点 
+        TreeNode* root = new TreeNode(stoi(rootStr));
+        
         //创建队列，将根节点入队
         queue<TreeNode*> q;
         q.push(root);
