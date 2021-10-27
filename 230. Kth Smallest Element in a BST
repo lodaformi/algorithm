@@ -12,31 +12,45 @@
  //此方法并非最优
 class Solution {
 public:
-    //注意：不能写到kthSmallest一个函数里面，因为用了递归的性质，在指针为nullptr时，需return
-    //写到一个函数里面，整个函数就结束了
+    // 将所有的代码写到一个函数里面，中序遍历中if return有点难受，遇到return函数应该结束，
+    // 语法上来说，函数的末尾也要返回值，
+    //分开写好一点
+    // int count = 0;
+    // int res = 0;
+    // int kthSmallest(TreeNode* root, int k) {
+    //     if (root == nullptr) return -1;
+        
+    //     kthSmallest(root->left, k);
+    //     //中序遍历
+    //     count++;
+    //     if (k == count) {
+    //         res = root->val;
+    //         return res;
+    //     }
+    //     kthSmallest(root->right, k);
+
+    //     return res;
+    // }
+
+    
+    int rank = 0;      //用于记录元素从小到大的排名
+    int res = 0;        //用于存放结果
     int kthSmallest(TreeNode* root, int k) {
         traverse(root,k);
         return res;
     }
-
-    //res用于记录元素值
-    int res = -1;
-    //rank用于记录从大到小的排序
-    int rank = 0;
-
+    
+    //使用辅助函数
     void traverse(TreeNode* root, int k) {
         if (root == nullptr) return;
+        
         traverse(root->left, k);
-
-        /***中序遍历***/
+        //中序遍历
         rank++;
-        //如果找到，返回res
-        if (rank == k) {
+        if (k == rank) {
             res = root->val;
             return;
         }
-
         traverse(root->right, k);
-
     }
 };
