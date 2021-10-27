@@ -36,3 +36,22 @@ public:
         return nullptr;
     }
 };
+
+    //version 2
+    TreeNode* searchBST(TreeNode* root, int val) {
+        if  (root == nullptr) return nullptr;
+        //如果相等
+        if (val == root->val) {
+            return root;
+        }
+
+        //注意要用return返回左右子树的查找结果
+        if (val > root->val) 
+            return searchBST(root->right, val);
+
+        if (val < root->val) 
+            return searchBST(root->left, val);
+
+        //如果整个子树中都不存在val，则返回空指针
+        return nullptr;
+    }
