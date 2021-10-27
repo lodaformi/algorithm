@@ -28,3 +28,22 @@ public:
         convert(root->left);
     }
 };
+
+//version 2
+class Solution {
+public:
+    int sum = 0;    //用于记录元素值的累计和
+
+    TreeNode* bstToGst(TreeNode* root) {
+        if  (root == nullptr) return nullptr;
+
+        //先遍历右子树，遍历自己，再遍历左子树，降序排列
+        bstToGst(root->right);
+        //中序遍历
+        sum += root->val;     //sum累加
+        root->val = sum;      //更新节点的值
+        bstToGst(root->left);
+
+        return root;
+    }
+};
