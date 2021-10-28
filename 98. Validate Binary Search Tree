@@ -28,13 +28,16 @@ public:
     bool compare(TreeNode *root, TreeNode *min, TreeNode *max) {
         if (root == nullptr) return true;
 
-        //针对右子树，根节点右子树所有节点的值都比根节点大，否则为假
+        //根节点右子树所有节点的值都比根节点大，否则为假
         if (min != nullptr && min->val >= root->val) return false;
-        //针对左子树，根节点左子树所有节点的值都比根节点小，否则为假
+        
+        //根节点左子树所有节点的值都比根节点小，否则为假
         if (max != nullptr && max->val <= root->val) return false;
         
+        // 注意：下面的这个写法是错误的，min和max不能显示的写成nullptr，具体为什么????没有想明白
+        // return isValidBST(root->left, nullptr, root) && isValidBST(root->right, root, nullptr);
+        
         //左子树最大值为root_val，右子树最小为root_val
-        return compare(root->left, min, root) && 
-                 compare(root->right, root, max); 
+        return compare(root->left, min, root) && compare(root->right, root, max); 
     }
 };
