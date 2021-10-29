@@ -1,0 +1,49 @@
+//给定一个n值，可以创建出多少种BST
+
+class Solution {
+public:
+    //创建全局变量二维备忘录memo（未初始化），全局变量被下面的函数共享，不用在函数中添加额外参数
+    //大小在下面初始化中体现出来，此时也不知道n的大小，所以不能使用普通的数组
+    vector<vector<int>> memo;
+
+    int numTrees(int n) {
+        //当然也可以使用局部变量，在调用函数时加上参数即可
+        //因为BST节点是从1到n，而数组中的n表示0-(n-1)，要表示到n就用使用n+1，下标为0不用即可
+        // vector<vector<int>> memo(n+1, vector<int>(n+1));
+
+        //此处对应全局的memo变量，不用resize为n+1大小，直接使用
+        //如果使用resize，vector会添加大小为0的vector在memo中，后续push_back进来的一维vector排在后面，会报错。
+        // memo.resize(n+1);
+        for (int i=0; i<=n; i++) {  //注意大小，有n+1个一维vector
+            vector<int> v(n+1);     //一维的是[0,n]闭区间
+            memo.push_back(v);
+        }
+        
+        return numTrees(1, n);
+    }
+
+    int numTrees(int lo, int hi) {
+        if (lo > hi)  return 1;
+
+        if (memo[lo][hi] != 0) {
+            return memo[lo][hi];
+        }
+
+        int res = 0;
+        for (int i=lo; i<=hi; i++) {
+            //i
+            //当前节点
+
+            //left
+            int leftNum = numTrees(lo, i-1);
+
+            //right
+            int rightNum = numTrees(i+1, hi);            
+            res += leftNum * rightNum;
+        }
+        //将结果写入到memo中
+        memo[lo][hi] = res;
+
+        return res;
+    }
+};
