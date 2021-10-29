@@ -14,9 +14,9 @@ public:
     TreeNode* deleteNode(TreeNode* root, int key) {
         if  (root == nullptr)  return nullptr;
         if (root->val == key) {
-            //找到了，有3中情况
+            //找到了，有3种情况
             //情况1：没有左子树和右子树
-            // if  (root->left == nullptr && root->right == nullptr) return root;
+            // if  (root->left == nullptr && root->right == nullptr) return nullptr;
             //情况2：只有左子树或者只有右子树
             // if  (root->left == nullptr) return root->right;
             // if  (root->right == nullptr) return root->left;
@@ -54,6 +54,102 @@ public:
     //BST左子树中的右边一定是最大的
     TreeNode* get_max(TreeNode* root) {
         while (root->right != nullptr) root = root->right;
+        return root;
+    }
+};
+
+//////////////////////////////////////////////////////////////////////////
+
+class Solution {
+public:
+    // 自己写的代码
+    // TreeNode* findNode(TreeNode* root, int key) {
+    //     if (root == nullptr) return root;
+
+    //     if (root->val == key) return root;
+
+    //     if (val > root->val)  return findNode(root->right);
+    //     if (val < root->val) return findNode(root->left);
+
+    //     return nullptr;
+    // }
+
+    // if  (node != nullptr) {     //如果找到要删除的节点
+    //     //下面两个if能处理情况1和情况2
+    //     if (node->left == nullptr) {
+    //         node = node->right;
+    //         node->right = nullptr;
+    //     }
+    //     if (node->right == nullptr) {
+    //         node = node->left;
+    //         node->left = nullptr;
+    //     }
+
+    //     //情况3
+    //     TreeNode* maxNode = findMaxNode(node);
+    //     // swap(maxNode, node);
+    //     node->val = maxNode->val;
+    //     node->right = nullptr;
+    // }
+
+    //从左子树中找最大值
+    //这里root传入的其实是root->left，左子树的右边存在最大值
+    TreeNode* findMaxNode(TreeNode* root) {
+        while (root->right != nullptr) {
+            root = root->right;
+        }
+        return root;
+    }
+
+    //从右子树中找最小值
+    //这里root传入的其实是root->right，右子树的左边存在最小值
+    TreeNode* findMinNode(TreeNode* root) {
+        while (root->left != nullptr) {
+            root = root->left;
+        }
+        return root;
+    }    
+
+    TreeNode* deleteNode(TreeNode* root, int key) {
+        if (root == nullptr) return root;
+        
+        //若找到与key相等的节点，执行删除操作
+        if (root->val == key) {
+            //要删除的节点存在三种情况，
+            //1：末尾节点，没有左右孩子，直接删除
+            //2：只有左孩子或只有右孩子，用左孩子或右孩子替换自己
+            //3：既有左孩子又有右孩子，从左孩子中找出最大值节点，交换两个节点，删除最大值节点；
+            //     或者从右孩子中找出最小值节点，交换两个节点，删除最小值节点；
+            //   从左孩子找最大值，从右孩子找最小值，才能符合BST的特性
+            //   这与“左孩子中存放的是小于根节点的值，右孩子存放的是大于根节点的值“的基本概念有点绕
+            
+            //下面两个if能处理情况1和情况2
+            if (root->left == nullptr) { return root->right;
+                // node = node->right;
+                // node->right = nullptr;
+            }
+            if (root->right == nullptr) { return root->left;
+                // node = node->left;
+                // node->left = nullptr;
+            }
+
+            //情况3，在左子树中寻找最大值
+            TreeNode* maxNode = findMaxNode(root->left);           
+            root->val = maxNode->val;   //此处只是简单的赋值，当val域比较复杂时，可以用函数来处理
+             // swap(maxNode, node);    //可以交换两个节点的指针，但要正确处理两者的前驱和后继
+            root->left = deleteNode(root->left, maxNode->val);
+
+            // 情况3，在右子树中寻找最小值
+            // TreeNode* minNode = findMinNode(root->right);
+            // root->val = minNode->val;
+            // root->right = deleteNode(root->right, minNode->val);
+
+        } else if (key < root->val) {  //如果key小，在左子树中寻找
+            root->left = deleteNode(root->left, key);
+        } else if (key > root->val) {  //如果key大，在右子树中寻找
+            root->right = deleteNode(root->right ,key);
+        }
+
         return root;
     }
 };
