@@ -1,0 +1,51 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    int maxSum = 0;
+    int maxSumBST(TreeNode* root) {
+        helper(root);
+        //因为要考虑左右子树能不能构成BST，使用二叉树的后序遍历
+        return maxSum;
+    }
+
+    //返回一个4个元素的一维数组
+    //第一个元素表示是不是BST，0表示不是BST，1表示是BST
+    //第二个元素表示当前树右子树的最小值，右子树中所有节点要大于root->val
+    //第三个元素表示当前树左子树的最大值，左子树中所有节点要小于root->val
+    //满足前三个条件的，计算出第四个元素，表示所有BST树和的最大值
+    int* helper(TreeNode* root) {
+        if (root == nullptr) {
+            //在初始化时，第二个元素为int的最大值，第三个元素为int的最小值
+            return new int[4]{1, INT_MAX, INT_MIN, 0};
+        }
+        
+        int* arr = new int[4]{0};
+
+        int* leftRes = helper(root->left);
+        int* rightRes = helper(root->right);
+
+        //后序遍历
+        //判断左右子树和自己能不能构成BST
+        if (leftRes[0] == 1 && rightRes[0] == 1 && rightRes[1] > root->val && leftRes[2] < root->val) {
+            arr[0] = 1;
+            arr[1] = std::min(leftRes[1], root->val);
+            arr[2] = std::max(rightRes[2], root->val);
+            arr[3] = leftRes[3] + rightRes[3] + root->val;
+            maxSum = std::max(maxSum, arr[3]);
+        } else {
+            arr[0] = 0;
+        }
+
+        return arr;
+    } 
+};
