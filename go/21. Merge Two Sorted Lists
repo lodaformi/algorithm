@@ -1,0 +1,38 @@
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func mergeTwoLists(l1 *ListNode, l2 *ListNode) *ListNode {
+    newHead := new(ListNode)
+    ptr := newHead;
+
+    //go中没有while，只有for
+    //注意判断条件，是两个任何一个都不能为nil
+    for l1 != nil && l2 != nil {
+        //如果l1的值小，将其加入到新链表中
+        if l1.Val <= l2.Val {
+            ptr.Next = l1
+            l1 = l1.Next
+        }else {             //否则是l2的值小，将l2加入到新链表中
+            ptr.Next = l2
+            l2 = l2.Next
+        }
+        //移动新链表的指针
+        ptr = ptr.Next
+    }
+
+    //如果l1为空，将l2剩余的部分加入到新链表中
+    if l1 == nil {
+        ptr.Next = l2
+    }
+
+    //如果l2为空，将l1剩余的部分加入到新链表中
+    if l2 == nil {
+        ptr.Next = l1
+    }
+
+    return newHead.Next
+}
