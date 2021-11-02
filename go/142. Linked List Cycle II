@@ -1,0 +1,53 @@
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+ //如果链表有环，返回环开始的位置
+ //使用双指针中的快慢指针技巧，当快慢指针相遇时，慢指针走了k步，快指针走了2K步，快指针比慢指针多走了k步，k就是环的长度
+ //环的长度为k，假设快慢指针相遇在环的某个位置m，则慢指针再走k-m到达环开始的地方
+ //此时让其中任意一个指针从头开始，与另外一个指针一起，每次走一步，两者再次相遇时的位置就是环开始的地方
+func detectCycle(head *ListNode) *ListNode {
+    slow := head
+    fast := head
+
+    for fast != nil && fast.Next != nil {
+        slow = slow.Next
+        fast = fast.Next.Next
+
+        if (slow == fast) {
+            break
+        }
+    }
+
+    //如果此时fast为nil或者fast.Next为nil，说明不存在环，直接返回nil
+    if fast == nil || fast.Next == nil {
+        return nil
+    }
+
+    //若有环
+    fast = head
+
+    // 这个写法不简洁，但好理解
+    // 思路就是： //此时让其中任意一个指针从头开始，与另外一个指针一起，每次走一步，两者再次相遇时的位置就是环开始的地方
+    // 执行死循环，如果两个指针没有相遇，则都向后移动一个
+    // 需要注意的是：要先判断，因为可能两个指针相遇时已经处在了环开始的地方
+    // 举个例子，当只有1和2两个节点，并构成环，快慢指针相遇时，就是环开始的地方，直接返回即可
+    // for {
+    //     if slow == fast {
+    //         break
+    //     }
+    //     fast = fast.Next
+    //     slow = slow.Next
+    // }
+
+    //更简洁的表示
+    for slow != fast {
+        fast = fast.Next
+        slow = slow.Next
+    }
+
+    return fast
+}
