@@ -1,0 +1,23 @@
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+ //使用双指针中的快慢指针技巧，如果快指针和慢指针相遇，则存在环
+func hasCycle(head *ListNode) bool {
+    slow := head;
+    fast := head;
+
+    for fast != nil && fast.Next != nil {
+        slow = slow.Next
+        fast = fast.Next.Next
+
+        if slow == fast {
+            return true
+        }
+    }
+
+    return false
+}
