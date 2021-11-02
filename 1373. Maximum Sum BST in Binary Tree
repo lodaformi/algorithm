@@ -20,29 +20,46 @@ public:
 
     //返回一个4个元素的一维数组
     //第一个元素表示是不是BST，0表示不是BST，1表示是BST
-    //第二个元素表示当前树右子树的最小值，右子树中所有节点要大于root->val
-    //第三个元素表示当前树左子树的最大值，左子树中所有节点要小于root->val
+    //第二个元素记录以 root 为根的二叉树所有节点中的最小值，
+    //第三个元素记录以 root 为根的二叉树所有节点中的最大值，
     //满足前三个条件的，计算出第四个元素，表示所有BST树和的最大值
     int* helper(TreeNode* root) {
         if (root == nullptr) {
             //在初始化时，第二个元素为int的最大值，第三个元素为int的最小值
+            //这与数组元素的作用有点绕，为什么最小值要初始化为MAX，最大值要初始化为MIN
+            //而且在下面的if判断中，使用的是rightRes[1] > root->val && leftRes[2] < root->val
+            //这样初始化是对的
             return new int[4]{1, INT_MAX, INT_MIN, 0};
         }
-        
-        int* arr = new int[4]{0};
 
         int* leftRes = helper(root->left);
         int* rightRes = helper(root->right);
+      
+        int* arr = new int[4]{0};
 
         //后序遍历
-        //判断左右子树和自己能不能构成BST
+        //满足左右子树都是BST的同时，还要判断最小值和最大值与根节点的关系
+        //对于左子树来说，最小值永远是左子树的左子树的左子树...，最大值存在于某个左子树的右子树中
+        //对于右子树来说，最大值永远是右子树的右子树的右子树...，最小值存在于某个右子树的左子树中
+        //在做判断时，用的是右子树的最小值和左子树的最大值与根节点比较大小
+        //而在选值时，最小值肯定是左子树的左子树的左子树...，最大值是右子树的右子树的右子树...
+        //这就造成使用数组的索引是不一样的，要细细品
+
+        //右子树中所有节点要大于root->val，只要满足右子树的最小值大于root->val
+        //左子树中所有节点要小于root->val，只要满足左子树的最大值小于root->val
         if (leftRes[0] == 1 && rightRes[0] == 1 && rightRes[1] > root->val && leftRes[2] < root->val) {
+            // 以 root 为根的二叉树是 BST
             arr[0] = 1;
+            // 计算以 root 为根的这棵 BST 的最小值
             arr[1] = std::min(leftRes[1], root->val);
+            // 计算以 root 为根的这棵 BST 的最大值
             arr[2] = std::max(rightRes[2], root->val);
+            // 计算以 root 为根的这棵 BST 所有节点之和
             arr[3] = leftRes[3] + rightRes[3] + root->val;
+            // 更新全局变量
             maxSum = std::max(maxSum, arr[3]);
         } else {
+            // 以 root 为根的二叉树不是 BST
             arr[0] = 0;
         }
 
