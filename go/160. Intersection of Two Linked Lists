@@ -1,0 +1,50 @@
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+ //判断两个链表是否有相交节点，若相交返回该节点，若不相交返回nil
+ //思路：因为两个链表可能不等长，直接判断比较费事
+ //将A接到B的后面组成一个链表C；
+ //将B接到A的后面组成一个链表D；
+ //这样两个链表就等长了，
+ //在判断时，要分别从开始接的地方往后判断，如果有相交，则节点相同时为交点
+func getIntersectionNode(headA, headB *ListNode) *ListNode {
+    ptrA := headA
+    ptrB := headB
+    // for ptrA.Next != nil {
+    //     ptrA = ptrA.Next
+    // }
+    // ptrA.Next = headB
+
+    // for ptrB.Next != nil {
+    //     ptrB = ptrB.Next
+    // }
+    // ptrB.Next = headA        //这样写够成环了，造成运行程序超时
+
+    // for ptrA != nil {
+    //     if ptrA.Val == ptrB.Val {
+    //         break
+    //     }
+    //     ptrA = ptrA.Next
+    //     ptrB = ptrB.Next
+    // }
+
+    for ptrA != ptrB {
+        if (ptrA != nil) {
+            ptrA = ptrA.Next
+        }else {
+            ptrA = headB
+        }
+
+        if (ptrB != nil) {
+            ptrB = ptrB.Next
+        }else {
+            ptrB = headA
+        }
+    }
+
+    return ptrA
+}
