@@ -1,0 +1,22 @@
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+ //返回链表的中间节点
+ //使用双指针中的快慢指针技巧
+ //链表的长度有奇偶，也要分情况讨论
+ //当链表长度为奇数时，快指针指向最后一个节点时，慢指针指向中间节点
+ //当链表长度为偶数时，中间节点有两个，快指针为nil时，慢指针指向靠后位置的中间节点
+func middleNode(head *ListNode) *ListNode {
+    slow := head
+    fast := head
+    for fast != nil && fast.Next != nil {
+        slow = slow.Next
+        fast = fast.Next.Next
+    }
+
+    return slow
+}
