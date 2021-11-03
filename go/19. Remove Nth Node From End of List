@@ -1,0 +1,60 @@
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+ 
+ //以长度为5的链表为例，倒数第2个节点，正数是第4个
+ //总结为：长度为m的链表，倒数第n个节点，正数是第m-n+1个
+ 
+ //考虑到指针的移动，如果从链表第一个节点开始移动，只需移动m-n次即可达到
+ ////为了和指针的移动情况保持一致，添加一个头结点，则需要移动m-n+1次
+
+ //问题在于链表的长度事先是不知道的，除非先遍历一次。
+ //非要是只遍历一次链表，应该怎么做?
+ 
+ //用双指针技巧
+ 
+ //题目要求是删除倒数第n个节点，这时应找到这个节点的前驱，将前驱节点的指针指向下一个的下一个，即删除了倒数第n个节点
+ //这时需求改为找到倒数第n+1个节点，添加一个头结点，指针只需移动m-n
+
+ //当只有1个节点时
+
+func helper(head *ListNode, n int) *ListNode {
+    if n == 0 {
+        return head
+    }
+
+    return helper(head.Next, n-1)
+}
+
+
+func removeNthFromEnd(head *ListNode, n int) *ListNode {
+    if head == nil {
+        return nil
+    }
+    newHead := new(ListNode)
+    newHead.Next = head
+    
+    ptr := newHead
+
+    count := n+1
+    for count != 0 {
+        ptr = ptr.Next
+        count--
+    }
+
+    ptr2 := newHead
+    for ptr != nil {
+        ptr = ptr.Next
+        ptr2 = ptr2.Next
+    }
+
+    ptr2.Next = ptr2.Next.Next
+
+    return newHead.Next
+}
+
+
