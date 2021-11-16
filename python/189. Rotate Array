@@ -1,0 +1,42 @@
+# Given an array, rotate the array to the right by k steps, where k is non-negative.
+#Input: nums = [1,2,3,4,5,6,7], k = 3
+#Output: [5,6,7,1,2,3,4]
+#Explanation:
+#rotate 1 steps to the right: [7,1,2,3,4,5,6]
+#rotate 2 steps to the right: [6,7,1,2,3,4,5]
+#rotate 3 steps to the right: [5,6,7,1,2,3,4]
+
+class Solution(object):
+    def rotate(self, nums, k):
+        """
+        :type nums: List[int]
+        :type k: int
+        :rtype: None Do not return anything, modify nums in-place instead.
+        """
+        # 这种思路就是很直接，太直白了，但为什么不行？
+        # for i in range(k):
+        #     tmp = nums.pop()
+        #     nums = [tmp] + nums
+
+        # 解题思路：
+        # 在原数组上做操作，反转整个数组，这时后面的元素到了前面，前面的元素到了后面，只不过顺序是反的
+        # 反转前k个元素
+        # 反转后面的n-k个元素
+        # 优化的地方：当k大于数组的长度时，k = k%n，
+        # 举例：当长度是3的一个数组，反转4次，当反转第三次时，回到了原数组的样子，相当于反转了一次，那么只要取余，反转一次就好
+
+        leg = len(nums)
+        k = k % leg
+        self.reverse(nums, 0, leg -1)
+        self.reverse(nums, 0, k - 1)
+        self.reverse(nums, k, leg -1)
+
+        return nums
+
+    def reverse(self, nums, left, right):
+        while left < right:
+            tmp = nums[left]
+            nums[left] = nums[right]
+            nums[right] = tmp
+            left += 1
+            right -= 1
