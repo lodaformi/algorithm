@@ -1,0 +1,40 @@
+# 给定一个数组，数组中只包含 0 和 1，计算其中连续 1 的最大个数。
+# Input: nums = [1,1,0,1,1,1]
+# Output: 3
+
+class Solution(object):
+    def findMaxConsecutiveOnes(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        #解题思路：
+        #遍历数组，如果元素为1，连续值加1，如果元素为0，连续值与最大的连续值比较，保留大值
+        maxCount = 0
+        count = 0
+        # 自己写的代码，如果元素为1，count加一，第一个if判断，不考虑元素为零的情况
+        # 第二个if考虑元素为零和最后一个元素，为这两种情况时，比较count和maxCount的大小，保留大者，然后将count置为零
+        # 这个思路可以，但是不简洁，没必要考虑这么多情况，看下面的参考答案
+        # for i in range(len(nums)):
+        #     if (nums[i] == 1):
+        #         count += 1
+        #     if (i == (len(nums) - 1) or nums[i] == 0):
+        #         if count > maxCount:
+        #             maxCount = count
+        #         count = 0
+        # return maxCount
+
+        # 参考答案：
+        # 如果元素为1，count加一，同时更新maxCount，保留大值
+        # 不用在元素为零或者最后一个元素时才考虑更新maxCount
+        # 如果元素为零，count置为零
+        
+        #数组遍历的又一种方式
+        for num in nums:
+            if num == 1:
+                count += 1
+                maxCount = max(count, maxCount)
+            else:
+                count = 0
+        return maxCount
+
