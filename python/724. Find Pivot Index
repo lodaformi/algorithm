@@ -1,0 +1,27 @@
+# 给定一个数组 nums，找到「左侧元素和」与「右侧元素和相等」的位置，若找不到，则返回 -1。
+
+class Solution(object):
+    def pivotIndex(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        #解题思路：
+        #先遍历数组，求出所有元素的和sum
+        #再次遍历数组，如果sum减去当前元素的值等于其左边元素和的2倍，表示当前元素左边元素的和与其右边元素的和相等
+        #则当前索引就是数组的中心
+        #当为最左边元素，即首元素时，左边没有元素，即左边元素和为0
+        #当为最右边元素，即末尾元素时，右边没有元素，左边元素和等于sum减去末尾元素
+            #这两种情况均不符合 “sum减去当前元素的值等于其左边元素和的2倍” ，不用单独考虑，一视同仁即可
+        sum = 0
+        for i in range(len(nums)):
+            sum += nums[i]
+            
+        partSum = 0
+        for i in range(len(nums)):
+            if partSum * 2 == (sum - nums[i]):
+                return i
+            partSum += nums[i]
+        
+        #如果没有找到中心点，返回-1
+        return -1
