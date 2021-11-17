@@ -1,0 +1,29 @@
+# 给定一个数组 nums。要求输出数组 output，其中 output[i] 为数组 nums 中除了 nums[i] 之外的其他所有元素乘积。
+
+class Solution(object):
+    def productExceptSelf(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: List[int]
+        """
+        #解题思路：
+        #题目要求复杂度为O(n)，则不能嵌套循环；
+        #不能用除法，则不能使用遍历两次，第一次求出所有元素乘积，第二次用除法除去当前元素；况且这样子要考虑乘积是0的情况
+        #解法：
+        #定义一个res结果数组，大小与原数组相同
+        #使用两次累乘，第一次从左向右遍历，将元素左侧元素的乘积放入对应位置
+        #第二次从右向左，将元素右侧元素的乘积放入对应位置
+        size = len(nums)
+        res = [1 for _ in range(size)]
+
+        left = 1
+        for i in range(size):
+            res[i] *= left
+            left *= nums[i]
+
+        right = 1
+        for i in range(size-1,-1,-1): 
+            res[i] *= right
+            right *= nums[i]
+
+        return res
