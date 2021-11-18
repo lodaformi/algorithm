@@ -1,0 +1,33 @@
+#给定一个 n * n 大小的二维矩阵用来表示图像，其中每个像素的大小为 4 字节。
+
+#要求：设计一种算法，将图像旋转 90 度。并且要不占用额外内存空间。
+
+class Solution(object):
+    def rotate(self, matrix):
+        """
+        :type matrix: List[List[int]]
+        :rtype: None Do not return anything, modify matrix in-place instead.
+        """
+        #解题思路：
+        #题目要求原地旋转90度，即不用到额外的空间，可以使用两次翻转
+        #第一次：上下翻转，即第一行放到最后一行，最后一行放到第一行，第二行放到倒数第二行，倒数第二行放到第二行。。。
+            #具体做法就是第一行和最后一行对应元素交换，依次类推
+        #第二次：关于主对角线翻转
+            #其实就是行列互换
+
+        #矩阵，二维数组的行数
+        lines = len(matrix)
+
+        #第一次翻转
+        #外层循环控制行，i只要取到一半，除法//表示只要商
+        for i in range(lines//2):    
+            #因为此题目中矩阵是方阵，行列相等，可以直接使用lines变量
+            #交换的是一行中所有的元素
+            for j in range(lines):
+                matrix[i][j], matrix[lines-1-i][j] = matrix[lines-1-i][j], matrix[i][j]
+
+        #第二次翻转
+        for i in range(lines):
+            #内存循环只要下三角即可，主对角线元素不用动
+            for j in range(i):
+                matrix[i][j], matrix[j][i] = matrix[j][i], matrix[i][j]
