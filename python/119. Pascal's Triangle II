@@ -1,0 +1,22 @@
+#返回杨辉三角的某一行
+
+class Solution(object):
+    def getRow(self, rowIndex):
+        """
+        :type rowIndex: int
+        :rtype: List[int]
+        """
+        #思路：
+        #先生成杨辉三角，再返回这一行
+
+        pList = []
+        for i in range(rowIndex+1): #索引是从0开始的，在用range时，数值要加1
+            tmpList = []
+            for j in range(i+1):
+                if j == 0 or j == i:
+                    tmpList.append(1)
+                else:
+                    tmpList.append(pList[i-1][j-1] + pList[i-1][j])
+            pList.append(tmpList)
+        
+        return pList[rowIndex]
