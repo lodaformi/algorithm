@@ -1,0 +1,32 @@
+# 生成杨辉三角
+
+class Solution(object):
+    def generate(self, numRows):
+        """
+        :type numRows: int
+        :rtype: List[List[int]]
+        """
+
+        #解题思路：
+        #观察得知：数组中第一项和最后一项均为1，从第3个数组开始，中间元素是上一个数组对应位置左边元素和对应位置元素的和
+
+        #写法1：
+        resList = []
+        for i in range(numRows):
+            tempList = []
+            for j in range(i+1):
+                if (j == 0 or j == i):   #注意判断条件，当为第一项或者为最后一项时，追加1
+                    tempList.append(1)
+                else:                   #中间项是上一个数组对应位置左边元素和对应位置元素相加
+                    tempList.append(resList[i-1][j-1] + resList[i-1][j])
+            resList.append(tempList)
+
+        #写法2：
+        # for i in range(numRows):
+        #     tempList = [1 for _ in range(i+1)]  #将数组中的值全部初始化为1，下面更改中间的值
+        #     for j in range(i+1):
+        #         if (j != 0 and j != i):   #注意判断条件，两个条件需要同时满足，不能为第一项，同时不能为最后一项
+        #             tempList[j] = resList[i-1][j-1] + resList[i-1][j]  #更改这个值
+        #     resList.append(tempList)
+        
+        return resList
