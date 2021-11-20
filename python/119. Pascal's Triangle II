@@ -6,17 +6,43 @@ class Solution(object):
         :type rowIndex: int
         :rtype: List[int]
         """
-        #思路：
+        #思路1：
         #先生成杨辉三角，再返回这一行
+        #这个思路比较直接，但是没有什么技术含量
 
-        pList = []
-        for i in range(rowIndex+1): #索引是从0开始的，在用range时，数值要加1
-            tmpList = []
-            for j in range(i+1):
-                if j == 0 or j == i:
-                    tmpList.append(1)
-                else:
-                    tmpList.append(pList[i-1][j-1] + pList[i-1][j])
-            pList.append(tmpList)
+        # pList = []
+        # for i in range(rowIndex+1): #索引是从0开始的，外循环控制行数，在用range时，数值要加1
+        #     tmpList = []
+        #     for j in range(i+1):  #i+1的原因：当i为0时，j如果等于0，则内层循环直接退出，不行，要有一个数，所以加1；
+                                 #当i为2时，j可取0和1，就是说本行只有2个数，i为2时对应的是第三行有3个数，所以要加1；依次类推
+        #         if j == 0 or j == i:
+        #             tmpList.append(1)
+        #         else:
+        #             tmpList.append(pList[i-1][j-1] + pList[i-1][j])
+        #     pList.append(tmpList)
         
-        return pList[rowIndex]
+        # return pList[rowIndex]
+
+        #思路2：使用一个数组存放结果
+        # [0,0,0,0,0] 初始情况
+        # [1,1,0,0,0] 第一行
+        # [1,2,1,0,0] 第二行
+        # [1,3,3,1,0] 第三行
+        # [1,4,6,4,1] 第四行
+        # ...
+        #倒序生成数组元素，边界情况自然不必多说，杨辉三角的规则就是当前元素值是前一个数组对应位置元素和左边元素值之和
+        #在同一个数组中，倒序生成当前元素，改变的是当前的值，并不会改变左边的值，符合题意
+        #而如果正序生成当前元素，在下一次生成元素时，要用到改变后的值，结果就变了
+        #举例，在生成第三行时，如果正序，resList[1] = resList[0] + resList[1] = 1 + 2 =3
+        # resList[2] = resList[1] + resList[2] = 3 + 1 = 4 结果出错
+
+        resList = [0]*(rowIndex+1)  #索引是从0开始，rowIndex行有rowIndex+1个数
+        for i in range(rowIndex+1):
+            for j in range(i, -1, -1):  # 内层循环一定是倒序
+                if j==0 or j==i:
+                    resList[j] = 1
+                else:
+                    resList[j] = resList[j] + resList[j-1]
+        
+        return resList
+
