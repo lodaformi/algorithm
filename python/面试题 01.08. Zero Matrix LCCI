@@ -32,7 +32,7 @@ class Solution(object):
 
 
         #参考答案：
-        #不适用额外的空间
+        #不使用额外的空间
         #思路：
         #若出现了0元素，则该元素的行和列都要置为0。可以将二维数组分割成第一行和第一列与非第一行第一列元素
         #1：使用两个变量先判断第一行和第一列是否存在0元素，遇到0就返回True，不用再判断其他的值，因为都是要置为0的
@@ -73,12 +73,12 @@ class Solution(object):
                     matrix[i][j] = 0
 
         #第四步
-        #对第一行判断
-        for i in range(col):
-            if firstRowZero:
+        #对第一行判断  
+        if firstRowZero:
+            for i in range(col):
                 matrix[0][i] = 0
 
         #对第一列判断
-        for i in range(row):
-            if firstColZero:
+        if firstColZero:
+            for i in range(row):
                 matrix[i][0] = 0
