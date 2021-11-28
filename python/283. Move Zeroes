@@ -1,0 +1,33 @@
+#将数组所有 0 移动到末尾，并保持原有的非 0 数字的相对顺序。要求只能在原数组上进行操作。
+class Solution(object):
+    def moveZeroes(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: None Do not return anything, modify nums in-place instead.
+        """
+        #自己的思路，时间复杂度高
+        #使用冒泡排序，如果该元素是0，跟下一个元素交换位置
+
+        # for i in range(len(nums)-1): # n-1趟
+        #     flag = False
+        #     for j in range(len(nums)-1-i): 
+        #         if nums[j] == 0 :
+        #             nums[j], nums[j+1] = nums[j+1], nums[j]
+        #             flag = True
+        #     if flag == False:
+        #         break
+        
+        #参考答案：使用双指针left，right
+        #两者在元素不为零的时候同时向后移动
+        #元素为零时只移动right，然后交换left指向的零元素和right指向的非零元素，left再向后移动
+        #此时left左边都是非零元素，且原有顺序不变
+
+        left = 0
+        right = 0
+        while right < len(nums):
+            #当nums[right]等于0时，left指针不移动
+            if nums[right] != 0:
+                if left != right:
+                    nums[left], nums[right] = nums[right], nums[left]
+                left += 1
+            right += 1
